@@ -1,0 +1,6 @@
+#include "mpi.h"
+#include "libs.h"
+#include "petscmat.h"
+#include "petscvec.h"
+#include "petsc.h"
+#include "petscsys.h"
