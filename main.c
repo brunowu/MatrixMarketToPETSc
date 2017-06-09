@@ -13,7 +13,7 @@ int main(int argc, char ** argv){
 	char           matrixOutputFile[PETSC_MAX_PATH_LEN];
 	char           vectorOutputFile[PETSC_MAX_PATH_LEN];
   	PetscBool 		 flagMtx,flagVct;
-  	PetscInt 			 sizen;
+  	PetscInt 			 sizen, cplex = PETSC_FALSE;
   	MatrixInfo		 minfo;
 	
 
@@ -32,6 +32,7 @@ int main(int argc, char ** argv){
 	/* idem for the vector*/
 	ierr=PetscOptionsGetString(NULL,PETSC_NULL,"-vector_file",vectorInputFile,PETSC_MAX_PATH_LEN-1,&flagVct);CHKERRQ(ierr);
 	
+        ierr=PetscOptionsGetBool(NULL,PETSC_NULL,"-complex",&cplex, NULL);CHKERRQ(ierr);
 	/* Check if files where provided, raise an error if not */
 	if(!flagMtx && !flagVct){
 		SETERRQ(PETSC_COMM_WORLD,1,"No matrix file neither vector one where provided, what am I supposed to convert ? Void ???\n");
@@ -42,11 +43,10 @@ int main(int argc, char ** argv){
 	
 	if(flagMtx){
 		/* Get the matrix, either real or complex */
-		#if defined(PETSC_USE_COMPLEX) // if using complex data
+		if(cplex) // if using complex data
 				MMTgetMatrix(matrixInputFile,&A,&minfo);
-		#else
+		else
 				MMTgetMatrixReal(matrixInputFile,&A,&minfo);
-		#endif
 		
 		sprintf(matrixOutputFile,"%s_%dx%d_%dnnz.gz",matrixInputFile,minfo.n,minfo.m,minfo.nnz);
 		
@@ -63,11 +63,11 @@ int main(int argc, char ** argv){
 	}
 	if(flagVct){
 		/* Get the vector, either real or complex */
-		#if defined(PETSC_USE_COMPLEX) // if using complex data
+		if(cplex) // if using complex data
 			MMTgetVector(vectorInputFile,&b,&sizen);	
-		#else
+		else
 			MMTgetVectorReal(vectorInputFile,&b,&sizen);
-		#endif
+		
 		
 		sprintf(vectorOutputFile,"%s_%d.gz",vectorInputFile,sizen);
 		

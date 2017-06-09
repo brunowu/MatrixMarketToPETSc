@@ -26,6 +26,9 @@ or
 
 ./converter -matrix\_file matrix\_market\_file.mtx -vector\_file matrix_market_vector_file.mtx
 
+###For complex matrix market matrix:
+
+add the flg -complex PETSC\_TRUE in the end
 
 The results will be placed in separate PETSc binary files (in tar.gz)
 
