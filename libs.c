@@ -43,9 +43,11 @@ PetscErrorCode MMTgetMatrix(char * fin, Mat * A, MatrixInfo * minfo){
 		}
 		value=(PetscScalar)r_value+(PetscScalar)PETSC_i*i_value;
 		ierr = MatSetValues(*A,1,&row,1,&col,&value,INSERT_VALUES);CHKERRQ(ierr);
+		/*
 		if (row != col) {
 			ierr = MatSetValues(*A,1,&col,1,&row,&value,INSERT_VALUES);CHKERRQ(ierr);
 		}
+		*/
 	}
 	PetscPrintf(PETSC_COMM_WORLD,"Maximum number of NNZ on a line : %d\n",nz);
 	
@@ -156,8 +158,10 @@ PetscErrorCode MMTgetMatrixReal(char * fin, Mat * A, MatrixInfo * minfo){
 		}
 		value=(PetscScalar)r_value;
 		ierr = MatSetValues(*A,1,&row,1,&col,&value,INSERT_VALUES);CHKERRQ(ierr);
+	/*
 		if (row != col) {
 			ierr = MatSetValues(*A,1,&col,1,&row,&value,INSERT_VALUES);CHKERRQ(ierr);
+	*/
 		}
 	}
 	PetscPrintf(PETSC_COMM_WORLD,"Maximum number of NNZ on a line : %d\n",nz);
