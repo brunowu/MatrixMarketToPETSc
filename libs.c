@@ -43,11 +43,6 @@ PetscErrorCode MMTgetMatrix(char * fin, Mat * A, MatrixInfo * minfo){
 		}
 		value=(PetscScalar)r_value+(PetscScalar)PETSC_i*i_value;
 		ierr = MatSetValues(*A,1,&row,1,&col,&value,INSERT_VALUES);CHKERRQ(ierr);
-		/*
-		if (row != col) {
-			ierr = MatSetValues(*A,1,&col,1,&row,&value,INSERT_VALUES);CHKERRQ(ierr);
-		}
-		*/
 	}
 	PetscPrintf(PETSC_COMM_WORLD,"Maximum number of NNZ on a line : %d\n",nz);
 	
@@ -145,7 +140,7 @@ PetscErrorCode MMTgetMatrixReal(char * fin, Mat * A, MatrixInfo * minfo){
 	
 	/*Matrix reading*/
 	for (i=0; i<nnz; i++) {
-		fscanf(file,"%d %d %le\n",&row,&col,(double*)&r_value);
+		fscanf(file,"%d %d %le\n",&row,&col,&r_value);
 		row = row-1; col = col-1 ;
 		if(nztemp!=col){
 			nz=1;
@@ -158,11 +153,6 @@ PetscErrorCode MMTgetMatrixReal(char * fin, Mat * A, MatrixInfo * minfo){
 		}
 		value=(PetscScalar)r_value;
 		ierr = MatSetValues(*A,1,&row,1,&col,&value,INSERT_VALUES);CHKERRQ(ierr);
-	/*
-		if (row != col) {
-			ierr = MatSetValues(*A,1,&col,1,&row,&value,INSERT_VALUES);CHKERRQ(ierr);
-	*/
-		}
 	}
 	PetscPrintf(PETSC_COMM_WORLD,"Maximum number of NNZ on a line : %d\n",nz);
 	
@@ -170,6 +160,8 @@ PetscErrorCode MMTgetMatrixReal(char * fin, Mat * A, MatrixInfo * minfo){
 	PetscPrintf(PETSC_COMM_WORLD,"Assembling matrix within PETSc.\n");
 	MatAssemblyBegin(*A,MAT_FINAL_ASSEMBLY);
 	MatAssemblyEnd(*A,MAT_FINAL_ASSEMBLY);
+
+	//MatRealPart(*A);
 	PetscPrintf(PETSC_COMM_WORLD,"Finished matrix assembly.\n");
 	
 	fclose(file);
